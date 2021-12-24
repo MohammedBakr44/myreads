@@ -7,7 +7,6 @@ const Book = (props) => {
   useEffect(
     () => {
       BooksAPI.update(props.id, shelf);
-      BooksAPI.getAll().then((data) => console.log([...data]));
     },
     [shelf]
   );
