@@ -1,7 +1,21 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import * as BooksAPI from "./BooksAPI";
 const Book = (props) => {
   const authors = props.authors || [];
+  const [shelf, updateShelf] = useState(props.shelf);
+
+  useEffect(
+    () => {
+      BooksAPI.update(props.id, shelf);
+      BooksAPI.getAll().then((data) => console.log([...data]));
+    },
+    [shelf]
+  );
+
+  const handleShelf = (e) => {
+    updateShelf(e.target.value);
+  };
+
   return (
     <div className="book">
       <div className="book-top">
@@ -10,12 +24,12 @@ const Book = (props) => {
           style={{
             width: 128,
             height: 193,
-            backgroundImage: `url("${props.cover}")`,
+            backgroundImage: `url("${props.imageLinks.smallThumbnail}")`,
             backgroundSize: "cover",
           }}
         />
         <div className="book-shelf-changer">
-          <select>
+          <select value={shelf} onChange={handleShelf}>
             <option value="move" disabled>
               Move to...
             </option>
