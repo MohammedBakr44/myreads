@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import * as BooksAPI from "./BooksAPI";
 const Book = (props) => {
-  const authors = props.authors || [];
-  const [shelf, updateShelf] = useState(props.shelf);
+  const authors = props.book.authors || [];
+  const [shelf, updateShelf] = useState(props.book.shelf);
+  const [book, setBook] = useState({});
 
-  useEffect(
-    () => {
-      BooksAPI.update(props.id, shelf);
-    },
-    [shelf]
-  );
+  useEffect(() => {}, [shelf]);
 
   const handleShelf = (e) => {
     updateShelf(e.target.value);
   };
+
+  props.updateBook(props.book, shelf);
 
   return (
     <div className="book">
@@ -23,7 +21,7 @@ const Book = (props) => {
           style={{
             width: 128,
             height: 193,
-            backgroundImage: `url("${props.imageLinks.smallThumbnail}")`,
+            backgroundImage: `url("${props.book.imageLinks.smallThumbnail}")`,
             backgroundSize: "cover",
           }}
         />
@@ -39,7 +37,7 @@ const Book = (props) => {
           </select>
         </div>
       </div>
-      <div className="book-title">{props.title}</div>
+      <div className="book-title">{props.book.title}</div>
       <div className="book-authors">
         {authors.lenght > 1
           ? authors.map((author) => `${author}, `)

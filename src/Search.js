@@ -1,19 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
+import terms from "./searchTerms";
 import Book from "./Book";
-
-const Search = () => {
+const searchTerms = terms.terms;
+const Search = (props) => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
+  const [books, addBooks] = useState([]);
 
   useEffect(() => {
-    try {
-      BooksAPI.search(search).then((data) => setResults([...data]));
-    } catch (err) {
-      console.log(err);
-    }
+    BooksAPI.search(search).then((data) => {
+      try {
+        setResults(
+          [...data].filter((result) => result.imageLinks.smallThumbnail)
+        );
+      } catch (err) {
+        setResults([]);
+      }
+    });
+    //BooksAPI.getAll().then((data) => addBooks([...data]));
+    // displayResults();
+    //setResults([...results, ...filterBooks(results, books)]);
   }, [search]);
+
+  const displayResults = () => {
+    results.map((result) => console.log(result));
+  };
+
+  const filterBooks = (results, books) => {
+    let arr = [];
+    for (let i in results) {
+      for (let j in books) {
+        if (results[i].title === books[j].title && !results[i].shelf) {
+          results[i].shelf = books[j].shelf;
+          arr.push(results[i]);
+        }
+      }
+    }
+    return arr;
+  };
 
   const handleSearchInput = (e) => {
     setSearch(e.target.value);
@@ -42,15 +68,30 @@ const Search = () => {
           />
         </div>
       </div>
-      <div className="search-books-results">
-        <ol className="books-grid">
-          {results.map((result) => (
-            <li key={result.id}>
-              <Book {...result} />
-            </li>
-          ))}
-        </ol>
-      </div>
+      {search ? (
+        <div className="search-books-results">
+          <ol className="books-grid">
+            {results.map((result) => (
+              <li key={result.id}>
+                <Book book={{ ...result }} updateBook={props.updateBook} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      ) : (
+        <p
+          style={{
+            padding: "10px",
+            position: "absolute",
+            top: "20%",
+            left: "50%",
+            transform: "translate(-50%)",
+            width: "100%",
+          }}
+        >
+          Available search terms:[ {searchTerms.map((term) => `${term}, `)}]
+        </p>
+      )}
     </div>
   );
 };
