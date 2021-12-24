@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import Search from "./Search";
 import "./App.css";
@@ -67,7 +68,9 @@ const BooksApp = () => {
           </div>
         </div>
         <div className="open-search">
-          <button>Add a book</button>
+          <Link to="/search">
+            <button>Add a book</button>
+          </Link>
         </div>
       </div>
     </div>
