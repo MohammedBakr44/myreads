@@ -3,15 +3,16 @@ import * as BooksAPI from "./BooksAPI";
 const Book = (props) => {
   const authors = props.book.authors || [];
   const [shelf, updateShelf] = useState(props.book.shelf);
-  const [book, setBook] = useState({});
 
-  useEffect(() => {}, [shelf]);
+  useEffect(() => {
+    BooksAPI.get(props.book.id).then((data) => updateShelf(data.shelf));
+    return shelf;
+  });
 
   const handleShelf = (e) => {
     updateShelf(e.target.value);
+    props.updateBook(props.book, e.target.value);
   };
-
-  props.updateBook(props.book, shelf);
 
   return (
     <div className="book">

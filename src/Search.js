@@ -7,9 +7,9 @@ const searchTerms = terms.terms;
 const Search = (props) => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
-  const [books, addBooks] = useState([]);
 
   useEffect(() => {
+    if (!search || search.length === 0) return;
     BooksAPI.search(search).then((data) => {
       try {
         setResults(
@@ -23,23 +23,6 @@ const Search = (props) => {
     // displayResults();
     //setResults([...results, ...filterBooks(results, books)]);
   }, [search]);
-
-  const displayResults = () => {
-    results.map((result) => console.log(result));
-  };
-
-  const filterBooks = (results, books) => {
-    let arr = [];
-    for (let i in results) {
-      for (let j in books) {
-        if (results[i].title === books[j].title && !results[i].shelf) {
-          results[i].shelf = books[j].shelf;
-          arr.push(results[i]);
-        }
-      }
-    }
-    return arr;
-  };
 
   const handleSearchInput = (e) => {
     setSearch(e.target.value);

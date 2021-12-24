@@ -7,13 +7,32 @@ import "./App.css";
 const BooksApp = (props) => {
   const [books, addBooks] = useState([]);
 
-  useEffect(
-    () => {
-      BooksAPI.getAll().then((data) => addBooks([...data]));
-      return "";
-    },
-    [books]
-  );
+  useEffect(() => {
+    BooksAPI.getAll().then((data) => addBooks([...data]));
+    return books;
+  }, []);
+
+  const updateCurrentShelf = (book, newShelf) => {
+    let found = false;
+    const newBooks = books.map((b) => {
+      if (book.id === b.id) {
+        b.shelf = newShelf;
+        found = true;
+      }
+      return b;
+    });
+
+    if (!found) {
+      newBooks.push({ ...book, shelf: newShelf });
+    }
+    addBooks(newBooks);
+  };
+
+  const updateBook = (book, newShelf) => {
+    BooksAPI.update(book, newShelf).then(() => {
+      updateCurrentShelf(book, newShelf);
+    });
+  };
 
   return (
     <div className="app">
@@ -27,19 +46,19 @@ const BooksApp = (props) => {
               shelfHeader="Currently Reading"
               shelf="currentlyReading"
               books={books}
-              updateBook={props.updateBook}
+              updateBook={updateBook}
             />
             <BookShelf
               shelfHeader="Want to Read"
               shelf="wantToRead"
               books={books}
-              updateBook={props.updateBook}
+              updateBook={updateBook}
             />
             <BookShelf
               shelfHeader="Read"
               shelf="read"
               books={books}
-              updateBook={props.updateBook}
+              updateBook={updateBook}
             />
           </div>
         </div>
