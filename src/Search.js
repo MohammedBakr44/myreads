@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import terms from "./searchTerms";
@@ -9,6 +9,28 @@ const Search = (props) => {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
+    call(search); //BooksAPI.getAll().then((data) => addBooks([...data])));
+    // displayResults();
+    //setResults([...results, ...filterBooks(results, books)]);
+  }, [search]);
+
+  const handleSearchInput = (e) => {
+    setSearch(e.target.value);
+    // debounce(call(e.target.value));
+  };
+  // TODO
+  // https://www.freecodecamp.org/news/javascript-debounce-example/
+  function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
+    };
+  }
+
+  const call = (search) => {
     if (!search || search.length === 0) return;
     BooksAPI.search(search).then((data) => {
       try {
@@ -19,15 +41,9 @@ const Search = (props) => {
         setResults([]);
       }
     });
-    //BooksAPI.getAll().then((data) => addBooks([...data]));
-    // displayResults();
-    //setResults([...results, ...filterBooks(results, books)]);
-  }, [search]);
-
-  const handleSearchInput = (e) => {
-    setSearch(e.target.value);
   };
-
+  // https://dmitripavlutin.com/react-throttle-debounce/
+  const debouncedChange = useMemo(() => debounce(handleSearchInput, 500), []);
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -45,9 +61,9 @@ const Search = (props) => {
                 */}
           <input
             type="text"
-            value={search}
+            //value={search}
             placeholder="Search by title or author"
-            onChange={handleSearchInput}
+            onChange={debouncedChange}
           />
         </div>
       </div>
