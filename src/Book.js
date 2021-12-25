@@ -40,9 +40,10 @@ const Book = (props) => {
       </div>
       <div className="book-title">{props.book.title}</div>
       <div className="book-authors">
-        {authors.lenght > 1
-          ? authors.map((author) => `${author}, `)
-          : authors[0]}
+        {
+          // https://stackoverflow.com/questions/201724/easy-way-to-turn-javascript-array-into-comma-separated-list
+          authors.length > 1 ? authors.join(", ") : authors[0]
+        }
       </div>
     </div>
   );
