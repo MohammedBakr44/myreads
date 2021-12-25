@@ -12,6 +12,7 @@ const Search = (props) => {
     call(search); //BooksAPI.getAll().then((data) => addBooks([...data])));
     // displayResults();
     //setResults([...results, ...filterBooks(results, books)]);
+    return search;
   }, [search]);
 
   const handleSearchInput = (e) => {
