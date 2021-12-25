@@ -1,6 +1,7 @@
 # MyReads Project
 
 MyReads is a book tracking app made with React, React Router and using Udacity's books API. The project is a part of Udacity's React Nanodegree.
+[demo](https://myreads12.netlify.app/)
 
 # How to run the project
 
